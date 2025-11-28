@@ -1,62 +1,213 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Горячая линия</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мини-приложение</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
             background: #f2f5f9;
             margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            padding: 20px;
         }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 18px;
+            max-width: 420px;
+            margin: auto;
+        }
+
         .card {
             background: white;
-            padding: 24px;
-            width: 90%;
-            max-width: 360px;
+            padding: 22px;
             border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
             text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: 0.2s;
         }
-        h2 {
+
+        .card:hover {
+            transform: scale(1.02);
+        }
+
+        .card h2 {
             margin-top: 0;
         }
-        .call-btn {
-            margin-top: 20px;
+
+        .back {
+            margin: 12px auto 0;
+            display: block;
+            width: 100%;
+            max-width: 420px;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: #dadde2;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn {
             background: #2b8cff;
             color: white;
-            padding: 14px 20px;
+            padding: 14px;
             border: none;
-            border-radius: 10px;
-            font-size: 18px;
-            cursor: pointer;
             width: 100%;
+            border-radius: 10px;
+            font-size: 17px;
+            cursor: pointer;
         }
-        .call-btn:active {
+
+        .btn:active {
             background: #1b6edb;
+        }
+
+        .form-field {
+            margin-bottom: 14px;
+            text-align: left;
+        }
+
+        .form-field label {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .form-field input, .form-field textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>Горячая линия</h2>
-    <p>Нажмите кнопку ниже, чтобы сразу набрать номер 117</p>
+<div id="screen-main">
+    <h1>Сервисы</h1>
 
-    <button class="call-btn" onclick="call()">
-        📞 Позвонить 117
-    </button>
+    <div class="grid">
+        <div class="card" onclick="openHotline()">
+            <h2>📞 Горячая линия</h2>
+            <p>Нажмите, чтобы позвонить 117</p>
+        </div>
+
+        <div class="card" onclick="openMinister()">
+            <h2>🧑‍⚖️ Запись к министру</h2>
+            <p>Оставьте заявку на личный приём</p>
+        </div>
+
+        <div class="card" onclick="openAdmin()">
+            <h2>🏛 Обращение администрации</h2>
+            <p>Скоро будет доступно</p>
+        </div>
+    </div>
 </div>
 
+<!-- ================= ЭКРАН ГОРЯЧЕЙ ЛИНИИ ================= -->
+
+<div id="screen-hotline" style="display:none;">
+    <h1>Горячая линия</h1>
+
+    <div class="card">
+        <p>Нажмите кнопку ниже, чтобы сразу набрать номер 117</p>
+        <button class="btn" onclick="call117()">📞 Позвонить 117</button>
+    </div>
+
+    <button class="back" onclick="goBack()">← Назад</button>
+</div>
+
+<!-- ================= ЭКРАН ЗАПИСИ К МИНИСТРУ ================= -->
+
+<div id="screen-minister" style="display:none;">
+    <h1>Запись к министру</h1>
+
+    <div class="card" style="text-align:left;">
+        <div class="form-field">
+            <label>ФИО</label>
+            <input id="fio" placeholder="Иванов Иван Иванович">
+        </div>
+
+        <div class="form-field">
+            <label>Телефон</label>
+            <input id="phone" placeholder="+7 999 123-45-67">
+        </div>
+
+        <div class="form-field">
+            <label>Тема обращения</label>
+            <textarea id="topic" rows="4" placeholder="Опишите тему встречи"></textarea>
+        </div>
+
+        <button class="btn" onclick="sendMinisterRequest()">📨 Отправить заявку</button>
+    </div>
+
+    <button class="back" onclick="goBack()">← Назад</button>
+</div>
+
+<!-- ================= ЭКРАН ОБРАЩЕНИЯ АДМИНИСТРАЦИИ ================= -->
+
+<div id="screen-admin" style="display:none;">
+    <h1>Обращение администрации</h1>
+
+    <div class="card">
+        <p>Функция скоро появится.</p>
+    </div>
+
+    <button class="back" onclick="goBack()">← Назад</button>
+</div>
+
+<!-- ================= JS ЛОГИКА ================= -->
 <script>
-    function call() {
+    function show(screen) {
+        document.querySelectorAll("div[id^='screen']").forEach(s => s.style.display = "none");
+        document.getElementById(screen).style.display = "block";
+    }
+
+    function openHotline() {
+        show("screen-hotline");
+    }
+
+    function openMinister() {
+        show("screen-minister");
+    }
+
+    function openAdmin() {
+        show("screen-admin");
+    }
+
+    function goBack() {
+        show("screen-main");
+    }
+
+    function call117() {
         window.location.href = "tel:117";
+    }
+
+    function sendMinisterRequest() {
+        let fio = document.getElementById("fio").value.trim();
+        let phone = document.getElementById("phone").value.trim();
+        let topic = document.getElementById("topic").value.trim();
+
+        if (!fio || !phone || !topic) {
+            alert("Пожалуйста, заполните все поля.");
+            return;
+        }
+
+        // 👉 ПОТОМ ЗДЕСЬ СДЕЛАЕМ ОТПРАВКУ В МАКС-БОТА
+        alert("Заявка отправлена!\n\nФИО: " + fio + "\nТелефон: " + phone + "\nТема: " + topic);
+        
+        goBack();
     }
 </script>
 
