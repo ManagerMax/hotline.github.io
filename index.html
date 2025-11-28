@@ -193,7 +193,7 @@
     function call117() {
         window.location.href = "tel:117";
     }
-
+    
     function sendMinisterRequest() {
         let fio = document.getElementById("fio").value.trim();
         let phone = document.getElementById("phone").value.trim();
@@ -204,11 +204,26 @@
             return;
         }
 
-        // 👉 ПОТОМ ЗДЕСЬ СДЕЛАЕМ ОТПРАВКУ В МАКС-БОТА
-        alert("Заявка отправлена!\n\nФИО: " + fio + "\nТелефон: " + phone + "\nТема: " + topic);
-        
-        goBack();
+        fetch("http://localhost:8000/minister_request", {  // поменять на реальный адрес сервера
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({fio, phone, topic, user_id: "web"})
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "ok") {
+                alert("Заявка успешно отправлена!");
+            } else {
+                alert("Ошибка: " + data.message);
+            }
+            goBack();
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Ошибка отправки заявки");
+        });
     }
+
 </script>
 
 </body>
