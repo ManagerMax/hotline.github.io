@@ -204,7 +204,7 @@
             return;
         }
 
-        fetch("http://localhost:8000/minister_request", {  // поменять на реальный адрес сервера
+        fetch("http://192.168.1.45:8000/minister_request", {  // поменять на реальный адрес сервера
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({fio, phone, topic, user_id: "web"})
