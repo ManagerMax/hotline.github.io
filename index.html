@@ -107,11 +107,6 @@
             <h2>🧑‍⚖️ Запись к министру</h2>
             <p>Оставьте заявку на личный приём</p>
         </div>
-
-        <div class="card" onclick="openAdmin()">
-            <h2>🏛 Обращение администрации</h2>
-            <p>Скоро будет доступно</p>
-        </div>
     </div>
 </div>
 
@@ -155,18 +150,6 @@
     <button class="back" onclick="goBack()">← Назад</button>
 </div>
 
-<!-- ================= ЭКРАН ОБРАЩЕНИЯ АДМИНИСТРАЦИИ ================= -->
-
-<div id="screen-admin" style="display:none;">
-    <h1>Обращение администрации</h1>
-
-    <div class="card">
-        <p>Функция скоро появится.</p>
-    </div>
-
-    <button class="back" onclick="goBack()">← Назад</button>
-</div>
-
 <!-- ================= JS ЛОГИКА ================= -->
 <script>
     function show(screen) {
@@ -180,10 +163,6 @@
 
     function openMinister() {
         show("screen-minister");
-    }
-
-    function openAdmin() {
-        show("screen-admin");
     }
 
     function goBack() {
