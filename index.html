@@ -17,6 +17,21 @@
     .form-field { margin-bottom:14px; text-align:left; }
     .form-field label { font-size:14px; color:#555; }
     .form-field input, .form-field textarea { width:90%; padding:12px; margin-top:6px; border-radius:8px; border:1px solid #ccc; font-size:16px; }
+    /* Стили для уведомления */
+    #notification {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2b8cff;
+      color: white;
+      padding: 14px 22px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      display: none;
+      font-size: 16px;
+      z-index: 1000;
+    }
   </style>
 </head>
 <body>
@@ -49,6 +64,9 @@
     <button class="back" onclick="goBack()">← Назад</button>
   </div>
 
+  <!-- Блок уведомления -->
+  <div id="notification">✅ Ваше обращение находится в статусе обработки!</div>
+
   <script>
     function show(screen) { document.querySelectorAll("div[id^='screen']").forEach(s => s.style.display="none"); document.getElementById(screen).style.display="block"; }
     function openHotline() { show("screen-hotline"); }
@@ -56,6 +74,7 @@
     function goBack() { show("screen-main"); }
     function call117() { window.location.href = "tel:84212402511"; }
 
+    // Автоформатирование телефона
     const phoneInput = document.getElementById("phone");
     phoneInput.addEventListener("input", function() {
       let digits = this.value.replace(/\D/g,'');
@@ -69,22 +88,37 @@
       this.value=formatted;
     });
 
+    // Показ уведомления
+    function showNotification(message, duration=3000) {
+      const notif = document.getElementById("notification");
+      notif.textContent = message;
+      notif.style.display = "block";
+      setTimeout(() => { notif.style.display = "none"; }, duration);
+    }
+
     function sendMinisterRequest() {
-      let fio=document.getElementById("fio").value.trim();
-      let phone=document.getElementById("phone").value.trim();
-      let topic=document.getElementById("topic").value.trim();
+      let fio = document.getElementById("fio").value.trim();
+      let phone = document.getElementById("phone").value.trim();
+      let topic = document.getElementById("topic").value.trim();
 
-      if(!fio || !phone || !topic){ alert("Пожалуйста, заполните все поля."); return; }
-
-      let phoneDigits=phone.replace(/\D/g,'');
-      if(phoneDigits.length!==11 || !phoneDigits.startsWith("7")) {
-        alert("Введите корректный номер телефона в формате +79141443223."); return;
+      if(!fio || !phone || !topic){
+        showNotification("Пожалуйста, заполните все поля!", 4000);
+        return;
       }
 
-      if(topic.length<30){ alert("Пожалуйста, опишите суть обращения подробнее (минимум 30 символов)."); return; }
+      let phoneDigits = phone.replace(/\D/g,'');
+      if(phoneDigits.length!==11 || !phoneDigits.startsWith("7")) {
+        showNotification("Введите корректный номер телефона в формате +79141443223.", 4000);
+        return;
+      }
 
-      // Только локальная заглушка — никакого fetch
-      alert("✅ Ваше обращение находится в статусе обработки!");
+      if(topic.length < 30){
+        showNotification("Пожалуйста, опишите суть обращения подробнее (минимум 30 символов).", 4000);
+        return;
+      }
+
+      // Локальная заглушка
+      showNotification("✅ Ваше обращение находится в статусе обработки!", 4000);
       goBack();
     }
   </script>
