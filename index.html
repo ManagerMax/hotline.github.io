@@ -8,9 +8,14 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f2f5f9;
             margin: 0;
             padding: 20px;
+
+            background-color: #f2f5f9;
+            background-image: url("bg.png"); /* фоновая картинка */
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
         }
 
         h1 {
@@ -27,13 +32,13 @@
         }
 
         .card {
-            background: white;
+            background: rgba(255, 255, 255, 0.92);
             padding: 22px;
             border-radius: 14px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.07);
             text-align: center;
             cursor: pointer;
-            transition: 0.2s;
+            transition: transform 0.2s;
         }
 
         .card:hover {
@@ -45,7 +50,7 @@
         }
 
         .back {
-            margin: 12px auto 0;
+            margin: 14px auto 0;
             display: block;
             width: 100%;
             max-width: 420px;
@@ -82,7 +87,8 @@
             color: #555;
         }
 
-        .form-field input, .form-field textarea {
+        .form-field input,
+        .form-field textarea {
             width: 100%;
             padding: 12px;
             margin-top: 6px;
@@ -92,7 +98,10 @@
         }
     </style>
 </head>
+
 <body>
+
+<!-- ================= ГЛАВНЫЙ ЭКРАН ================= -->
 
 <div id="screen-main">
     <h1>Сервисы</h1>
@@ -100,30 +109,30 @@
     <div class="grid">
         <div class="card" onclick="openHotline()">
             <h2>📞 Горячая линия</h2>
-            <p>Нажмите, чтобы позвонить в приемную</p>
+            <p>Позвонить в приёмную</p>
         </div>
 
         <div class="card" onclick="openMinister()">
             <h2>🧑‍⚖️ Запись к министру</h2>
-            <p>Оставьте заявку на личный приём</p>
+            <p>Заявка на личный приём</p>
         </div>
     </div>
 </div>
 
-<!-- ================= ЭКРАН ГОРЯЧЕЙ ЛИНИИ ================= -->
+<!-- ================= ГОРЯЧАЯ ЛИНИЯ ================= -->
 
 <div id="screen-hotline" style="display:none;">
     <h1>Горячая линия</h1>
 
     <div class="card">
-        <p>Нажмите кнопку ниже, чтобы сразу набрать номер</p>
-        <button class="btn" onclick="call117()">📞 Позвонить в приемную</button>
+        <p>Нажмите кнопку ниже, чтобы позвонить</p>
+        <button class="btn" onclick="call117()">📞 Позвонить в приёмную</button>
     </div>
 
     <button class="back" onclick="goBack()">← Назад</button>
 </div>
 
-<!-- ================= ЭКРАН ЗАПИСИ К МИНИСТРУ ================= -->
+<!-- ================= ЗАПИСЬ К МИНИСТРУ ================= -->
 
 <div id="screen-minister" style="display:none;">
     <h1>Запись к министру</h1>
@@ -141,7 +150,7 @@
 
         <div class="form-field">
             <label>Тема обращения</label>
-            <textarea id="topic" rows="4" placeholder="Опишите тему встречи"></textarea>
+            <textarea id="topic" rows="4" placeholder="Кратко опишите тему встречи"></textarea>
         </div>
 
         <button class="btn" onclick="sendMinisterRequest()">📨 Отправить заявку</button>
@@ -150,7 +159,8 @@
     <button class="back" onclick="goBack()">← Назад</button>
 </div>
 
-<!-- ================= JS ЛОГИКА ================= -->
+<!-- ================= JS ================= -->
+
 <script>
     function show(screen) {
         document.querySelectorAll("div[id^='screen']").forEach(s => s.style.display = "none");
@@ -172,37 +182,32 @@
     function call117() {
         window.location.href = "tel:84212402511";
     }
-    
+
     function sendMinisterRequest() {
-        let fio = document.getElementById("fio").value.trim();
-        let phone = document.getElementById("phone").value.trim();
-        let topic = document.getElementById("topic").value.trim();
+        const fio = document.getElementById("fio").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const topic = document.getElementById("topic").value.trim();
 
         if (!fio || !phone || !topic) {
             alert("Пожалуйста, заполните все поля.");
             return;
         }
 
-        fetch("http://192.168.1.45:8000/minister_request", {  // поменять на реальный адрес сервера
+        fetch("http://192.168.1.45:8000/minister_request", {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({fio, phone, topic, user_id: "web"})
+            body: JSON.stringify({ fio, phone, topic, user_id: "web" })
         })
         .then(res => res.json())
         .then(data => {
-            if (data.status === "ok") {
-                alert("Заявка успешно отправлена!");
-            } else {
-                alert("Ошибка: " + data.message);
-            }
+            alert(data.status === "ok"
+                ? "Заявка успешно отправлена"
+                : "Ошибка: " + data.message
+            );
             goBack();
         })
-        .catch(err => {
-            console.error(err);
-            alert("Ошибка отправки заявки");
-        });
+        .catch(() => alert("Ошибка отправки заявки"));
     }
-
 </script>
 
 </body>
