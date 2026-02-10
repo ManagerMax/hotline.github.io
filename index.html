@@ -5,100 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Мини-приложение</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f5f9;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 24px;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-      max-width: 420px;
-      margin: auto;
-    }
-    .card {
-      background: white;
-      padding: 22px;
-      border-radius: 14px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-      text-align: center;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-    .card:hover {
-      transform: scale(1.02);
-    }
-    .card h2 {
-      margin-top: 0;
-    }
-    .back {
-      margin: 12px auto 0;
-      display: block;
-      width: 100%;
-      max-width: 420px;
-      padding: 12px;
-      border-radius: 10px;
-      border: none;
-      background: #dadde2;
-      cursor: pointer;
-      font-size: 16px;
-    }
-    .btn {
-      background: #2b8cff;
-      color: white;
-      padding: 14px;
-      border: none;
-      width: 100%;
-      border-radius: 10px;
-      font-size: 17px;
-      cursor: pointer;
-    }
-    .btn:active {
-      background: #1b6edb;
-    }
-    .form-field {
-      margin-bottom: 14px;
-      text-align: left;
-    }
-    .form-field label {
-      font-size: 14px;
-      color: #555;
-    }
-    .form-field input,
-    .form-field textarea {
-      width: 90%;
-      padding: 12px;
-      margin-top: 6px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-    }
+    body { font-family: Arial, sans-serif; background: #f2f5f9; margin:0; padding:20px; }
+    h1 { text-align: center; margin-bottom: 24px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 18px; max-width:420px; margin:auto; }
+    .card { background:white; padding:22px; border-radius:14px; box-shadow:0 4px 20px rgba(0,0,0,0.07); text-align:center; cursor:pointer; transition:0.2s; }
+    .card:hover { transform: scale(1.02); }
+    .card h2 { margin-top:0; }
+    .back { margin:12px auto 0; display:block; width:100%; max-width:420px; padding:12px; border-radius:10px; border:none; background:#dadde2; cursor:pointer; font-size:16px; }
+    .btn { background:#2b8cff; color:white; padding:14px; border:none; width:100%; border-radius:10px; font-size:17px; cursor:pointer; }
+    .btn:active { background:#1b6edb; }
+    .form-field { margin-bottom:14px; text-align:left; }
+    .form-field label { font-size:14px; color:#555; }
+    .form-field input, .form-field textarea { width:100%; padding:12px; margin-top:6px; border-radius:8px; border:1px solid #ccc; font-size:16px; }
   </style>
 </head>
 <body>
 
-  <!-- ================= ЭКРАН МЕНЮ ================= -->
   <div id="screen-main">
     <h1>Сервисы</h1>
     <div class="grid">
-      <div class="card" onclick="openHotline()">
-        <h2>📞 Горячая линия</h2>
-        <p>Нажмите, чтобы позвонить в приемную</p>
-      </div>
-      <div class="card" onclick="openMinister()">
-        <h2>🧑‍⚖️ Запись к министру</h2>
-        <p>Оставьте заявку на личный приём</p>
-      </div>
+      <div class="card" onclick="openHotline()"><h2>📞 Горячая линия</h2><p>Нажмите, чтобы позвонить в приемную</p></div>
+      <div class="card" onclick="openMinister()"><h2>🧑‍⚖️ Запись к министру</h2><p>Оставьте заявку на личный приём</p></div>
     </div>
   </div>
 
-  <!-- ================= ЭКРАН ГОРЯЧЕЙ ЛИНИИ ================= -->
   <div id="screen-hotline" style="display:none;">
     <h1>Горячая линия</h1>
     <div class="card">
@@ -108,77 +38,52 @@
     <button class="back" onclick="goBack()">← Назад</button>
   </div>
 
-  <!-- ================= ЭКРАН ЗАПИСИ К МИНИСТРУ ================= -->
   <div id="screen-minister" style="display:none;">
     <h1>Запись к министру</h1>
     <div class="card" style="text-align:left;">
-      <div class="form-field">
-        <label>ФИО</label>
-        <input id="fio" placeholder="Иванов Иван Иванович">
-      </div>
-      <div class="form-field">
-        <label>Телефон</label>
-        <input id="phone" placeholder="+7 914 144-32-23" maxlength="16">
-      </div>
-      <div class="form-field">
-        <label>Тема обращения</label>
-        <textarea id="topic" rows="4" placeholder="Опишите тему встречи"></textarea>
-      </div>
+      <div class="form-field"><label>ФИО</label><input id="fio" placeholder="Иванов Иван Иванович"></div>
+      <div class="form-field"><label>Телефон</label><input id="phone" placeholder="+7 914 144-32-23" maxlength="16"></div>
+      <div class="form-field"><label>Тема обращения</label><textarea id="topic" rows="4" placeholder="Опишите тему встречи"></textarea></div>
       <button class="btn" onclick="sendMinisterRequest()">📨 Отправить заявку</button>
     </div>
     <button class="back" onclick="goBack()">← Назад</button>
   </div>
 
-  <!-- ================= JS ЛОГИКА ================= -->
   <script>
-    function show(screen) {
-      document.querySelectorAll("div[id^='screen']").forEach(s => s.style.display = "none");
-      document.getElementById(screen).style.display = "block";
-    }
-
+    function show(screen) { document.querySelectorAll("div[id^='screen']").forEach(s => s.style.display="none"); document.getElementById(screen).style.display="block"; }
     function openHotline() { show("screen-hotline"); }
     function openMinister() { show("screen-minister"); }
     function goBack() { show("screen-main"); }
     function call117() { window.location.href = "tel:84212402511"; }
 
-    // Форматирование телефона
     const phoneInput = document.getElementById("phone");
-    phoneInput.addEventListener("input", function(e) {
-      let digits = this.value.replace(/\D/g,''); // оставляем только цифры
-      if(digits.startsWith("8")) digits = "7" + digits.slice(1); // меняем 8 на 7
-      if(!digits.startsWith("7")) digits = "7" + digits.slice(1);
-      let formatted = "+" + digits[0];
-      if(digits.length > 1) formatted += " " + digits.slice(1,4);
-      if(digits.length >= 4) formatted += " " + digits.slice(4,7);
-      if(digits.length >= 7) formatted += "-" + digits.slice(7,9);
-      if(digits.length >= 9) formatted += "-" + digits.slice(9,11);
-      this.value = formatted;
+    phoneInput.addEventListener("input", function() {
+      let digits = this.value.replace(/\D/g,'');
+      if(digits.startsWith("8")) digits="7"+digits.slice(1);
+      if(!digits.startsWith("7")) digits="7"+digits.slice(1);
+      let formatted="+"+digits[0];
+      if(digits.length>1) formatted+=" "+digits.slice(1,4);
+      if(digits.length>=4) formatted+=" "+digits.slice(4,7);
+      if(digits.length>=7) formatted+="-"+digits.slice(7,9);
+      if(digits.length>=9) formatted+="-"+digits.slice(9,11);
+      this.value=formatted;
     });
 
     function sendMinisterRequest() {
-      let fio = document.getElementById("fio").value.trim();
-      let phone = document.getElementById("phone").value.trim();
-      let topic = document.getElementById("topic").value.trim();
+      let fio=document.getElementById("fio").value.trim();
+      let phone=document.getElementById("phone").value.trim();
+      let topic=document.getElementById("topic").value.trim();
 
-      if (!fio || !phone || !topic) {
-        alert("Пожалуйста, заполните все поля.");
-        return;
+      if(!fio || !phone || !topic){ alert("Пожалуйста, заполните все поля."); return; }
+
+      let phoneDigits=phone.replace(/\D/g,'');
+      if(phoneDigits.length!==11 || !phoneDigits.startsWith("7")) {
+        alert("Введите корректный номер телефона в формате +79141443223."); return;
       }
 
-      // Проверка корректного номера +7XXXXXXXXXX
-      let phoneDigits = phone.replace(/\D/g,'');
-      if(phoneDigits.length !== 11 || !phoneDigits.startsWith("7")) {
-        alert("Введите корректный номер телефона в формате +79141443223.");
-        return;
-      }
+      if(topic.length<30){ alert("Пожалуйста, опишите суть обращения подробнее (минимум 30 символов)."); return; }
 
-      // Проверка темы обращения минимум 30 символов
-      if(topic.length < 30) {
-        alert("Пожалуйста, опишите суть обращения подробнее (минимум 30 символов).");
-        return;
-      }
-
-      // Заглушка
+      // Только локальная заглушка — никакого fetch
       alert("✅ Ваше обращение находится в статусе обработки!");
       goBack();
     }
